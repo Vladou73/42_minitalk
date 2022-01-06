@@ -1,6 +1,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <signal.h>
+#include <stdlib.h>
 
 int	ft_atoi(const char *src)
 {
@@ -34,19 +35,18 @@ void	ft_send_signal(int pid, char c)
 	int mask = 128; /* 10000000 */
 	while (mask > 0)
 	{
-		// printf("%d", (c & mask) > 0 );
 		if ((c & mask) > 0)
 		{
 			kill(pid, SIGUSR1); //signal for bit 1
-			printf("1");
+			//printf("1");
 		}
 		else
 		{
 			kill(pid, SIGUSR2); //signal for bit 0
-			printf("0");
+			//printf("0");
 		}
 		mask >>= 1; /* move the bit down */
-		usleep(1000);
+		usleep(100);
 	}
 }
 
@@ -68,7 +68,7 @@ int main(int argc, char **argv)
 		usleep(1000);
 		//break;
 	}
-	printf("\n");
+	exit(0);
 	// kill(pid, SIGUSR1);
 	return (0);
 }

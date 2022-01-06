@@ -1,3 +1,5 @@
 a.out
 server.o
 client.o
+client
+server

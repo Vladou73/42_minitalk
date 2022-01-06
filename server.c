@@ -3,6 +3,8 @@
 #include <signal.h>
 #include <stdlib.h>
 
+#include "libc.h"
+
 void	ft_free_null_ptr(char **ptr)
 {
 	if (*ptr)
@@ -84,31 +86,37 @@ char	convert_binary_to_char(char *bin_str)
 	return (char)(total);
 }
 
-void	handler_sigusr(int	sigtype)
+//void	handler_sigusr(int	sigtype)
+//{
+//	static	char binary_str[7];
+//	//static	char *msg;
+//	int		bin_index;
+
+//	//usleep(100);
+//	bin_index = ft_strlen(binary_str);
+//	if (sigtype == 30)
+//		binary_str[bin_index] = '1';
+//	else
+//		binary_str[bin_index] = '0';
+
+//	if (bin_index < 7)
+//	{
+//		binary_str[bin_index + 1] = 0;
+//		//printf("lolz\n");
+//	}
+//	else //1) ajouter le binaire transformé en lettre à la variable msg puis 2) reset l'index du binary
+//	{
+//		//printf("coucou");
+//		//msg = ft_strjoin_free(&msg, convert_binary_to_char(binary_str));
+//		printf("%c", convert_binary_to_char(binary_str));
+//		binary_str[0] = 0;
+//	}
+//	//printf("index=%d, bin=%s\n", bin_index, binary_str);
+//}
+//static void	ft_stock_char(int signal, siginfo_t *siginfo, void *data)
+void handler_sigusr(int sig)
 {
-	static	char binary_str[7];
-	static	char *msg;
-	char	*temp;
-	int		bin_index;
-	//char	letter[1];
-
-	temp = NULL;
-	//letter[0]=0;
-	bin_index = ft_strlen(binary_str);
-
-	if (sigtype == 30)
-		binary_str[bin_index] = '1';
-	else
-		binary_str[bin_index] = '0';
-	if (bin_index < 7)
-		binary_str[bin_index + 1] = 0;
-	else //1) ajouter le binaire transformé en lettre à la variable msg puis 2) reset l'index du binary
-	{
-		msg = ft_strjoin_free(&msg, convert_binary_to_char(binary_str));
-		printf("%s\n", msg);
-		binary_str[0] = 0;
-	}
-	//printf("index=%d, bin=%s\n", bin_index, binary_str);
+	printf("%d", sig);
 }
 
 int main()
@@ -116,21 +124,18 @@ int main()
 	int	i;
 	struct	sigaction sa;
 
+	//memset(&sa, 0, sizeof(struct sigaction));
 	sa.sa_handler = handler_sigusr;
+	sa.sa_flags = SA_SIGINFO;
 	// sa.sa_mask
-	// sa.sa_flags = NULL;
-
-	printf("%c\n", convert_binary_to_char("01100011"));
 
 	i = getpid();
 	printf("pid=%d\n", i);
 
+	sigaction(SIGUSR1, &sa, NULL);
+	sigaction(SIGUSR2, &sa, NULL);
 	while (1)
-	{
-		sigaction(SIGUSR1, &sa, NULL);
-		sigaction(SIGUSR2, &sa, NULL);
-	}
+		pause();
 
-	// pause();
 	return (0);
 }
