@@ -41,31 +41,24 @@ size_t	ft_strlcpy(char *dst, char *src, size_t dst_size)
 	return (src_size);
 }
 
-char	*ft_strjoin_free(char **s1, char **s2)
+char	*ft_strjoin_free(char **s1, char c)
 {
 	char	*dst;
 	size_t	dst_size;
 	size_t	i;
-	size_t	j;
 
-	if (!*s1 && !*s2)
+	if (!*s1 && !c)
 		return (NULL);
-	dst_size = ft_strlen(*s1) + ft_strlen(*s2) + 1;
+	dst_size = ft_strlen(*s1) + 1 + 1;
 	dst = malloc(sizeof(char) * dst_size);
 	if (!dst)
 		return (NULL);
 	ft_strlcpy(dst, *s1, dst_size);
-	j = 0;
 	i = ft_strlen(dst);
-	while ((*s2)[j] && (i + j + 1 < dst_size))
-	{
-		dst[i + j] = (*s2)[j];
-		j++;
-	}
+	dst[i] = c;
 	if (i != dst_size)
-		dst[i + j] = 0;
+		dst[i + 1] = 0;
 	ft_free_null_ptr(s1);
-	ft_free_null_ptr(s2);
 	return (dst);
 }
 
@@ -95,27 +88,27 @@ void	handler_sigusr(int	sigtype)
 {
 	static	char binary_str[7];
 	static	char *msg;
-	char *temp;
-	int bin_index;
-	char *letter;
+	char	*temp;
+	int		bin_index;
+	//char	letter[1];
 
 	temp = NULL;
+	//letter[0]=0;
 	bin_index = ft_strlen(binary_str);
-	if (sigtype == 10)
+
+	if (sigtype == 30)
 		binary_str[bin_index] = '1';
 	else
 		binary_str[bin_index] = '0';
-	if (bin_index == 7) //1) ajouter le binaire transformé en lettre à la variable msg puis 2) reset l'index du binary
+	if (bin_index < 7)
+		binary_str[bin_index + 1] = 0;
+	else //1) ajouter le binaire transformé en lettre à la variable msg puis 2) reset l'index du binary
 	{
-		printf("finished\n");
-		printf("%c\n",convert_binary_to_char(binary_str));
-		*letter = convert_binary_to_char(binary_str);
-		temp = ft_strjoin_free(&msg, &letter);
-		printf("%s\n", temp);
+		msg = ft_strjoin_free(&msg, convert_binary_to_char(binary_str));
+		printf("%s\n", msg);
 		binary_str[0] = 0;
 	}
-
-	printf("index=%d, bin=%s\n", bin_index, binary_str);
+	//printf("index=%d, bin=%s\n", bin_index, binary_str);
 }
 
 int main()

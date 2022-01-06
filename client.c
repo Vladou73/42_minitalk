@@ -52,7 +52,7 @@ void	ft_send_signal(int pid, char c)
 
 int main(int argc, char **argv)
 {
-	int		i;
+	//int		i;
 	char	*msg;
 	int		pid;
 
@@ -66,7 +66,7 @@ int main(int argc, char **argv)
 		ft_send_signal(pid, *msg);
 		msg++;
 		usleep(1000);
-		break;
+		//break;
 	}
 	printf("\n");
 	// kill(pid, SIGUSR1);
