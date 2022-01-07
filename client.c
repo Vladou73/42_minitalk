@@ -3,6 +3,21 @@
 #include <signal.h>
 #include <stdlib.h>
 
+void	*ft_memset(void *ptr, int c, size_t n)
+{
+	unsigned int	i;
+	char			*s;
+
+	i = 0;
+	s = (char *) ptr;
+	while (i < n)
+	{
+		s[i] = (unsigned char) c;
+		i++;
+	}
+	return (ptr);
+}
+
 int	ft_atoi(const char *src)
 {
 	int	dest;
@@ -29,8 +44,6 @@ int	ft_atoi(const char *src)
 
 void	ft_send_signal(int pid, char c)
 {
-	// printf("%c\n", c);
-
 	int mask = 128; /* 10000000 */
 	while (mask > 0)
 	{
@@ -39,22 +52,34 @@ void	ft_send_signal(int pid, char c)
 		else
 			kill(pid, SIGUSR2); //signal for bit 0
 		mask >>= 1; /* move the bit down */
-		// pause();
-		usleep(1000);
+		pause();
+		// usleep(100);
 	}
+}
+
+void	ft_handler_pingpong(int sigtype, siginfo_t *siginfo, void *ucontext)
+{
+	usleep(10);
 }
 
 int main(int argc, char **argv)
 {
 	char	*msg;
 	int		pid;
+	struct sigaction sa_client;
 
 	if (argc < 3)
 		return (1);
 
+	ft_memset(&sa_client, 0, sizeof(struct sigaction));
+	sa_client.sa_sigaction = ft_handler_pingpong;
+	sa_client.sa_flags = SA_SIGINFO;
+
 	pid = ft_atoi(argv[1]);
 	msg = argv[2];
-	printf("%d\n",pid);
+	// printf("%d\n",pid);
+
+	sigaction(SIGUSR1, &sa_client, NULL);
 
 	while (*msg)
 	{
@@ -63,7 +88,6 @@ int main(int argc, char **argv)
 		// usleep(100);
 		// break;
 	}
-	exit(0);
-
+	ft_send_signal(pid, '\0');
 	return (0);
 }
