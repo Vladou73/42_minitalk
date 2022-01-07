@@ -29,30 +29,23 @@ int	ft_atoi(const char *src)
 
 void	ft_send_signal(int pid, char c)
 {
-	// kill(pid, SIGUSR2);
 	// printf("%c\n", c);
-	// printf("%d", (c & mask) > 0 );
+
 	int mask = 128; /* 10000000 */
 	while (mask > 0)
 	{
 		if ((c & mask) > 0)
-		{
 			kill(pid, SIGUSR1); //signal for bit 1
-			//printf("1");
-		}
 		else
-		{
 			kill(pid, SIGUSR2); //signal for bit 0
-			//printf("0");
-		}
 		mask >>= 1; /* move the bit down */
-		usleep(100);
+		// pause();
+		usleep(1000);
 	}
 }
 
 int main(int argc, char **argv)
 {
-	//int		i;
 	char	*msg;
 	int		pid;
 
@@ -61,14 +54,16 @@ int main(int argc, char **argv)
 
 	pid = ft_atoi(argv[1]);
 	msg = argv[2];
+	printf("%d\n",pid);
+
 	while (*msg)
 	{
 		ft_send_signal(pid, *msg);
 		msg++;
-		usleep(1000);
-		//break;
+		// usleep(100);
+		// break;
 	}
 	exit(0);
-	// kill(pid, SIGUSR1);
+
 	return (0);
 }
