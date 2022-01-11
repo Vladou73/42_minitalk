@@ -62,7 +62,7 @@ static void handler_sigusr_bis(int sigtype, siginfo_t *siginfo, void *ucontext)
 	usleep(100);
 
 	//kill(siginfo->si_pid, SIGUSR1); //systeme ping pong -> pas sur de l'utiliser
-	
+
 	if (count_signals < 32)
 		handle_msg_size(sigtype, &count_signals, &is_first_signal);
 	else
