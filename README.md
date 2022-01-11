@@ -20,3 +20,27 @@ Et ce qui est bien précisé sur le sujet, c'est que linux ne met pas en file d'
 Par contre sur mac, tu as ce système de file d'attente. Je te conseille de le rendre compatible avec Linux car c'est bien plus intéressant (tu dois réaliser un système de file d'attente donc)
 Pour la doc, man sigaction, man 2 kill, man signal..
 # 42_minitalk
+
+
+
+#include <signal.h>
+// L'appel système sigaction() sert à modifier l'action effectuée par un processus à la réception d'un signal spécifique.
+// signum indique le signal concerné, à l'exception de SIGKILL et SIGSTOP.
+// Si act est non nul, la nouvelle action pour le signal signum est définie par act. Si oldact est non nul,
+//  l'ancienne action est sauvegardée dans oldact
+
+
+int sigaction(int signum, const struct sigaction *act,
+	struct sigaction *oldact);
+
+
+#include <signal.h>
+The kill() system call can be used to send any signal to any process group or process.
+int kill(pid_t pid, int sig);
+If pid is positive, then signal sig is sent to the process with the ID specified by pid.
+
+#include <sys/types.h>
+#include <unistd.h>
+// getpid() renvoie l'identifiant du processus appelant.
+pid_t getpid(void);
+
