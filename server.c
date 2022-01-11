@@ -1,86 +1,70 @@
-// char convert_binary_to_char(char *bin_str)
-// {
-// int i;
-// int decimal_val;
-// int total;
-
-// total = 0;
-// decimal_val = 1;
-// i = 7;
-// while(i >= 0)
-// {
-//   if (bin_str[i] == '1')
-//     total += decimal_val;
-//   decimal_val *= 2;
-//   i--;
-
-// }
-// return (char)(total);
-// }
-
-// void handler_sigusr(int sigtype, siginfo_t *siginfo, void *ucontext)
-// {
-// static char binary_str[7];
-// int   bin_index;
-
-// (void)ucontext;
-// usleep(100);
-// bin_index = ft_strlen(binary_str);
-// if (sigtype == SIGUSR1)
-//   binary_str[bin_index] = '1';
-// else
-//   binary_str[bin_index] = '0';
-// if (bin_index < 7)
-//   binary_str[bin_index + 1] = 0;
-// else
-// {
-//   binary_str[0] = 0;
-//   msg = ft_strjoin_free(&msg, convert_binary_to_char(binary_str));
-//   if (convert_binary_to_char(binary_str) == '\0')
-//     ft_putstr_fd(msg, 1);
-// }
-// ft_putnbr_fd(1, siginfo->si_pid);
-// kill(siginfo->si_pid, SIGUSR1);
-// }
-
 #include "./includes/server.h"
 
 static char *msg;
 
+static	int handle_msg_size(int sigtype, uint32_t count_signals, int bin_index, char is_first_signal)
+{
+	static	uint32_t len_msg;
+	
+	ft_putstr_fd("check", 1);
+	if (is_first_signal == '\0')
+	{
+		bin_index = 31;
+		is_first_signal = '1';
+	}
+	len_msg |= (uint32_t)((sigtype == SIGUSR1) << bin_index);
+	bin_index--;
+	count_signals++;
+	if (bin_index == 0)
+	{
+		is_first_signal = '\0';
+		//allocate full size of message
+		msg = malloc(len_msg + 4); // + 4 pour le caractere NULL a la fin ?
+		if (!msg)
+			return (1);
+		ft_memset(msg, 0, len_msg + 4);
+	}
+	return (0);
+}
+
 static void handler_sigusr_bis(int sigtype, siginfo_t *siginfo, void *ucontext)
 {
-  static char c;
-  static int bin_index;
-  static char is_first_signal;
+	static	char c;
+	static	int bin_index;
+	static	char is_first_signal;
+	static	uint32_t count_signals;
 
-  (void)ucontext;
-  (void)siginfo;
-  usleep(100);
+	(void)ucontext;
+	(void)siginfo;
+	usleep(100);
 
-  if (is_first_signal == '\0')
-  {
-    bin_index = 7;
-    is_first_signal = '1';
-  }
-  if (bin_index >= 0)
-  {
-    // ft_putnbr_fd(sigtype == SIGUSR1, 1);
-    //kill(siginfo->si_pid, SIGUSR1);
-    c |= (char)((sigtype == SIGUSR1) << bin_index);
-    bin_index--;
-  }
-  if (bin_index < 0)
-  {
-    // ft_putchar_fd(c, 1);
-    msg = ft_strjoin_free(&msg, c);
-    is_first_signal = '\0';
-    if (c == '\0')
-    {
-      ft_putstr_fd(msg, 1);
-      msg = NULL;
-    }
-    c = 0;
-  }
+	//kill(siginfo->si_pid, SIGUSR1); //systeme ping pong -> pas sur de l'utiliser
+	
+	if (count_signals < 32)
+		handle_msg_size(sigtype, count_signals, bin_index, is_first_signal);
+
+	if (is_first_signal == '\0')
+	{
+		bin_index = 7;
+		is_first_signal = '1';
+	}
+	if (bin_index >= 0)
+	{
+		c |= (char)((sigtype == SIGUSR1) << bin_index);
+		bin_index--;
+	}
+	if (bin_index < 0)
+	{
+		//msg = ft_strjoin_free(&msg, c);
+		msg[ft_strlen(msg)] = c;
+		is_first_signal = '\0';
+	if (c == '\0')
+	{
+		ft_putstr_fd(msg, 1);
+		ft_free_null_ptr(&msg);
+	}
+	c = 0;
+	}
 }
 
 int main()
