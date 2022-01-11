@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   server.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vnafissi <vnafissi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/01/11 19:12:09 by vnafissi          #+#    #+#             */
+/*   Updated: 2022/01/11 19:12:10 by vnafissi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./includes/server.h"
 
 static char *msg;
@@ -14,7 +26,7 @@ static	int handle_msg_size(int sigtype, uint32_t *count_signals, char *is_first_
 	if (*count_signals == 32)
 	{
 		*is_first_signal = '\0';
-		msg = malloc(sizeof(char) * (len_msg + 1)); //allocate full size of message
+		msg = malloc(sizeof(char) * (len_msg + 1));
 		if (!msg)
 			return (1);
 		ft_memset(msg, 0, sizeof(char) * (len_msg + 1));
@@ -52,7 +64,7 @@ static	void store_print_msg(int sigtype, uint32_t *count_signals, char *is_first
 	}
 }
 
-static void handler_sigusr_bis(int sigtype, siginfo_t *siginfo, void *ucontext)
+static void handler_sigusr(int sigtype, siginfo_t *siginfo, void *ucontext)
 {
 	static	char is_first_signal;
 	static	uint32_t count_signals;
@@ -60,9 +72,6 @@ static void handler_sigusr_bis(int sigtype, siginfo_t *siginfo, void *ucontext)
 	(void)ucontext;
 	(void)siginfo;
 	usleep(100);
-
-	//kill(siginfo->si_pid, SIGUSR1); //systeme ping pong -> pas sur de l'utiliser
-
 	if (count_signals < 32)
 		handle_msg_size(sigtype, &count_signals, &is_first_signal);
 	else
@@ -74,14 +83,12 @@ int main()
   struct sigaction sa;
 
   ft_memset(&sa, 0, sizeof(struct sigaction));
-  // sa.sa_sigaction = handler_sigusr;
-  sa.sa_sigaction = handler_sigusr_bis;
+  sa.sa_sigaction = handler_sigusr;
   sa.sa_flags = SA_SIGINFO;
   ft_putnbr_fd(getpid(), 1);
   ft_putchar_fd('\n', 1);
   sigaction(SIGUSR1, &sa, NULL);
   sigaction(SIGUSR2, &sa, NULL);
-
   while (1)
     pause();
   return (0);

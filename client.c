@@ -1,62 +1,57 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   client.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vnafissi <vnafissi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/01/11 19:02:14 by vnafissi          #+#    #+#             */
+/*   Updated: 2022/01/11 19:09:50 by vnafissi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./includes/client.h"
-#include <stdint.h>
 
-
-void  ft_send_signal(int pid, char c)
+static	void ft_send_signal(int pid, char c)
 {
-	int mask = 128; /* 10000000 */
+	int mask = 128;
 	while (mask > 0)
 	{
 		if ((c & mask) > 0)
-			kill(pid, SIGUSR1); //signal for bit 1
+			kill(pid, SIGUSR1);
 		else
-			kill(pid, SIGUSR2); //signal for bit 0
-		mask >>= 1; /* move the bit down */
-		//pause(); //uniquement si on utilise le ping pong
-		usleep(1000); //need this usleep with 1000 otherwise for large messages all signals are not sent
+			kill(pid, SIGUSR2);
+		mask >>= 1;
+		usleep(1000);
 	}
 }
 
-//static void ft_handler_pingpong(int sigtype, siginfo_t *siginfo, void *ucontext)
-//{
-//	(void)sigtype;
-//	(void)siginfo;
-//	(void)ucontext;
-//	usleep(10);
-//}
+static	void ft_send_signal_len(int pid, int i, uint32_t len_msg)
+{
+	if ((len_msg & (1u << i)))
+		kill(pid, SIGUSR1);
+	else
+		kill(pid, SIGUSR2);
+	usleep(1000);
+}
 
 int main(int argc, char **argv)
 {
-	char	*msg;
-	int		pid;
-	int		i;
-	//struct sigaction sa_client; //uniquement si on utilise le ping pong
+	char		*msg;
+	int			pid;
+	int			i;
 	uint32_t	len_msg;
 
 	if (argc < 3)
 		return (1);
-
 	pid = ft_atoi(argv[1]);
 	msg = argv[2];
 	len_msg = (uint32_t)ft_strlen(msg);
-
-	printf("len_msg=%u\n",len_msg);
-
-	//ft_memset(&sa_client, 0, sizeof(struct sigaction));
-	//sa_client.sa_sigaction = ft_handler_pingpong;
-	//sa_client.sa_flags = SA_SIGINFO;
-	//  sigaction(SIGUSR1, &sa_client, NULL);
-	
 	i = 31;
 	while (i >= 0)
 	{
-		if ((len_msg & (1u << i)))
-			kill(pid, SIGUSR1); //signal for bit 1
-		else
-			kill(pid, SIGUSR2); //signal for bit 0
+		ft_send_signal_len(pid, i, len_msg);
 		i--;
-		//pause(); //uniquement si on utilise le ping pong
-		usleep(1000); //need this usleep  with 1000 otherwise for large messages all signals are not sent
 	}
 	while (*msg)
 	{
