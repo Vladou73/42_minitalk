@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_free_null_ptr.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vnafissi <vnafissi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/01/14 12:30:25 by vnafissi          #+#    #+#             */
+/*   Updated: 2022/01/14 12:40:05 by vnafissi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft.h"
 
-void  ft_free_null_ptr(char **ptr)
+void	ft_free_null_ptr(char **ptr)
 {
-  if (*ptr)
-  {
-    free(*ptr);
-    *ptr = NULL;
-  }
+	if (*ptr)
+	{
+		free(*ptr);
+		*ptr = NULL;
+	}
 }

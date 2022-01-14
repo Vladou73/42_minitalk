@@ -10,8 +10,6 @@ ft_memset.c \
 ft_putnbr_fd.c \
 ft_putstr_fd.c \
 ft_putchar_fd.c \
-ft_strjoin_free.c \
-ft_strlcpy.c \
 ft_strlen.c \
 
 OBJS=$(SRCS:.c=.o)

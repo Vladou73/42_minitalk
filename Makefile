@@ -6,7 +6,7 @@
 #    By: vnafissi <vnafissi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/11 19:12:34 by vnafissi          #+#    #+#              #
-#    Updated: 2022/01/11 19:12:35 by vnafissi         ###   ########.fr        #
+#    Updated: 2022/01/14 12:29:17 by vnafissi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,25 +58,12 @@ OBJS_SERVER=$(SRCS_SERVER:.c=.o)
 all: $(NAME_CLIENT) $(NAME_SERVER)
 
 $(NAME_CLIENT): $(OBJS_CLIENT)
-	@${MAKE} -C libft
-	@echo "minitalk : libft compiled."
-	@${CC} -g ${CFLAGS} -o ${NAME_CLIENT} ${OBJS_CLIENT} libft/libft.a ${INCS}
-	@echo "minitalk : server compiled."
-#$(MAKE) -C ${LIBFTDIRNAME}
-#cp ${LIBFTDIRNAME}/${LIBFTNAME} $(NAME_CLIENT)
-#$(CC) -c $(FLAGS) $(INCS) $(SRCS_CLIENT)
-# ar -rcs $(NAME_CLIENT) $(OBJS)
+	${MAKE} -C libft
+	${CC} -g ${CFLAGS} -o ${NAME_CLIENT} ${OBJS_CLIENT} libft/libft.a ${INCS}
 
 $(NAME_SERVER): $(OBJS_SERVER)
-	@${MAKE} -C libft
-	@echo "minitalk : libft compiled."
-	@${CC} -g ${CFLAGS} -o ${NAME_SERVER} ${OBJS_SERVER} libft/libft.a ${INCS}
-	@echo "minitalk : server compiled."
-#$(MAKE) -C ${LIBFTDIRNAME}
-#cp ${LIBFTDIRNAME}/${LIBFTNAME} $(NAME_SERVER)
-#$(CC) -c $(FLAGS) $(INCS) $(SRCS_SERVER)
-# ar -rcs $(NAME_SERVER) $(OBJS)
-#${CC} ${CFLAGS} ${INCS} ${OBJS} -o $(NAME) ${LIBFTDIRNAME}/${LIBFTNAME}
+	${MAKE} -C libft
+	${CC} -g ${CFLAGS} -o ${NAME_SERVER} ${OBJS_SERVER} libft/libft.a ${INCS}
 
 clean:
 	${MAKE} -C ${LIBFTDIRNAME} clean

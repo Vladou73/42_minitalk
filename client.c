@@ -6,15 +6,17 @@
 /*   By: vnafissi <vnafissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 19:02:14 by vnafissi          #+#    #+#             */
-/*   Updated: 2022/01/11 19:09:50 by vnafissi         ###   ########.fr       */
+/*   Updated: 2022/01/14 12:28:54 by vnafissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/client.h"
 
-static	void ft_send_signal(int pid, char c)
+static void	ft_send_signal(int pid, char c)
 {
-	int mask = 128;
+	int	mask;
+
+	mask = 128;
 	while (mask > 0)
 	{
 		if ((c & mask) > 0)
@@ -26,7 +28,7 @@ static	void ft_send_signal(int pid, char c)
 	}
 }
 
-static	void ft_send_signal_len(int pid, int i, uint32_t len_msg)
+static void	ft_send_signal_len(int pid, int i, uint32_t len_msg)
 {
 	if ((len_msg & (1u << i)))
 		kill(pid, SIGUSR1);
@@ -35,7 +37,7 @@ static	void ft_send_signal_len(int pid, int i, uint32_t len_msg)
 	usleep(1000);
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	char		*msg;
 	int			pid;

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   libft.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vnafissi <vnafissi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/01/14 12:39:13 by vnafissi          #+#    #+#             */
+/*   Updated: 2022/01/14 12:41:22 by vnafissi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef LIBFT_H
 # define LIBFT_H
 
@@ -10,14 +22,12 @@
 # include <string.h>
 
 // prototypes
-size_t ft_strlen(const char *s);
-size_t ft_strlcpy(char *dst, char *src, size_t dst_size);
-int   ft_atoi(const char *src);
-void  *ft_memset(void *ptr, int c, size_t n);
-void  ft_putchar_fd(char c, int fd);
-void  ft_putstr_fd(char *s, int fd);
-void  ft_putnbr_fd(int n, int fd);
-void  ft_free_null_ptr(char **ptr);
-char  *ft_strjoin_free(char **s1, char c);
+size_t	ft_strlen(const char *s);
+int		ft_atoi(const char *src);
+void	*ft_memset(void *ptr, int c, size_t n);
+void	ft_putchar_fd(char c, int fd);
+void	ft_putstr_fd(char *s, int fd);
+void	ft_putnbr_fd(int n, int fd);
+void	ft_free_null_ptr(char **ptr);
 
 #endif
