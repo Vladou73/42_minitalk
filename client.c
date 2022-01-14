@@ -6,7 +6,7 @@
 /*   By: vnafissi <vnafissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 19:02:14 by vnafissi          #+#    #+#             */
-/*   Updated: 2022/01/14 12:28:54 by vnafissi         ###   ########.fr       */
+/*   Updated: 2022/01/14 14:48:03 by vnafissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,21 @@ static void	ft_send_signal_len(int pid, int i, uint32_t len_msg)
 	usleep(1000);
 }
 
+static int	has_wrong_params(int argc, char **argv)
+{
+	if (argc != 3)
+	{
+		ft_putstr_fd("wrong number of params.", 1);
+		return (1);
+	}
+	if (kill(ft_atoi(argv[1]), 0) == -1)
+	{
+		ft_putstr_fd("wrong pid passed in params", 1);
+		return (1);
+	}
+	return (0);
+}
+
 int	main(int argc, char **argv)
 {
 	char		*msg;
@@ -44,7 +59,7 @@ int	main(int argc, char **argv)
 	int			i;
 	uint32_t	len_msg;
 
-	if (argc < 3)
+	if (has_wrong_params(argc, argv) == 1)
 		return (1);
 	pid = ft_atoi(argv[1]);
 	msg = argv[2];
